@@ -9,6 +9,7 @@ export const cards = [
         selected: false,
         id: uuidv4(),
         selectMenu: 'Печень утки разварная с артишоками.',
+        productAvailability: false
     },
     {
         taste: 'рыбой',
@@ -18,6 +19,7 @@ export const cards = [
         selected: false,
         id: uuidv4(),
         selectMenu: 'Головы щучьи с чесноком да свежайшая сёмгушка.',
+        productAvailability: true
     },
     {
         taste: 'курой',
@@ -27,5 +29,6 @@ export const cards = [
         selected: false,
         id: uuidv4(),
         selectMenu: 'Филе из цыплят с трюфелями в бульоне.',
+        productAvailability: true
     }
 ]

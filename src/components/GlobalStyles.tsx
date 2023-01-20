@@ -8,10 +8,6 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    min-height: 100vh;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
     @media (max-width: 1160px) {
       font-size: 75%;
     }
