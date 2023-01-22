@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/testovoe_funbox/static/js/main.7149433a.js",
+    "main.js": "/testovoe_funbox/static/js/main.217999e5.js",
     "static/js/787.16109f1c.chunk.js": "/testovoe_funbox/static/js/787.16109f1c.chunk.js",
-    "static/media/Group 1.png": "/testovoe_funbox/static/media/Group 1.7b4b2f837024e6b1a3e6.png",
+    "static/media/Group_1.png": "/testovoe_funbox/static/media/Group_1.7b4b2f837024e6b1a3e6.png",
     "static/media/Photo (1).png": "/testovoe_funbox/static/media/Photo (1).22c79082392189fbda9e.png",
     "index.html": "/testovoe_funbox/index.html",
-    "main.7149433a.js.map": "/testovoe_funbox/static/js/main.7149433a.js.map",
+    "main.217999e5.js.map": "/testovoe_funbox/static/js/main.217999e5.js.map",
     "787.16109f1c.chunk.js.map": "/testovoe_funbox/static/js/787.16109f1c.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.7149433a.js"
+    "static/js/main.217999e5.js"
   ]
 }
