@@ -2,6 +2,7 @@ import React, {FC, useCallback, useState} from 'react';
 import styled from "styled-components";
 import {declension} from "../utils/declension";
 import cat from '../assets/img/Photo (1).png'
+import FooterTextComponent from "./FooterText";
 
 interface ICard {
     taste: string,
@@ -36,6 +37,7 @@ const CardItem: FC<IProps> = ({
     const [selectedCards, setSelectedCards] = useState<string[]>([])
     const [text, setText] = useState<string>()
 
+    const activeCards = selectedCards.includes(id)
 
     const declensionMouse = declension(presents, ['мышь', 'мыши', 'мышей'])
 
@@ -56,20 +58,9 @@ const CardItem: FC<IProps> = ({
         setSelectedCards(prev => prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id])
     }, [])
 
-    const activeCards = selectedCards.includes(id)
 
 
-    const statusCard = () => {
-        if (selected && productAvailability) {
-            return <FooterText>{selectMenu}</FooterText>
-        } else if (!selected && productAvailability) {
-            return <FooterText>
-                Чего сидишь? Порадуй котэ, <a href={'#'} onClick={() => handlerSelectCards(id)}>купи</a>.
-            </FooterText>
-        } else if (!productAvailability) {
-            return <DisableCard>Печалька, с {taste} закончился.</DisableCard>
-        }
-    }
+
 
     const styledSupraTitle = {color: '#666666', fontWeight: '400', fontSize: '16px', lineHeight: '19px'}
     const styledHover = {
@@ -109,7 +100,7 @@ const CardItem: FC<IProps> = ({
 
                 >
                     <InfoContainer>
-                        {selected && productAvailability ? <SupraTitleHover
+                        {activeCards && productAvailability ? <SupraTitleHover
                                 style={text === 'Сказочное заморское яство' ? styledSupraTitle
                                     : styledHover}>{text}</SupraTitleHover>
                             : <SupraTitle productAvailability={productAvailability}>Сказочное заморское
@@ -132,7 +123,13 @@ const CardItem: FC<IProps> = ({
                     </Weight>
                 </Card>
             </CardContainer>
-            {statusCard()}
+            <FooterTextComponent selected={selected}
+                                 productAvailability={productAvailability}
+                                 taste={taste}
+                                 selectMenu={selectMenu}
+                                 handlerSelectCards={handlerSelectCards}
+                                 id={id}
+                                 activeCards={activeCards}/>
         </Wrapper>
     )
 }
@@ -247,32 +244,4 @@ export const Weight = styled.div<{
     line-height: 22px;
   }
 
-`
-
-const FooterText = styled.div`
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 15px;
-  color: #FFFFFF;
-  text-align: center;
-  @media (max-width: 1240px) {
-    margin-bottom: 10px;
-  }
-
-  a {
-    color: #1698D9;
-    text-decoration: underline;
-    text-decoration-style: dotted;;
-  }
-`
-
-const DisableCard = styled.div`
-  color: #FFFF66;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 15px;
-  text-align: center;
-  @media (max-width: 1240px) {
-    margin-bottom: 10px;
-  }
 `
