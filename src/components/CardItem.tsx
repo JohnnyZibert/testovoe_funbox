@@ -1,7 +1,9 @@
 import React, {FC, useState} from 'react';
 import styled from "styled-components";
 import {declension} from "../utils/declension";
-import cat from '../assets/img/PhotoCat.png'
+import cat from '../assets/img/Photo (1).png'
+import {selectedOnClick} from "../store/selectOnclick/selectOnclick";
+import {useAppDispatch} from "../store/Store";
 
 interface ICard {
     taste: string,
@@ -16,25 +18,29 @@ interface ICard {
 
 interface IProps extends ICard {
     cards: ICard[]
-    index: number
-    handleOnClickCard: (id: string) => void
+    setCurrentIdCard: (id: string) => void
+    currenIdCard: string
+    // handleOnClickCard: (id: string) => void
 
 
 }
 
 const CardItem: FC<IProps> = ({
                                   weight,
-                                  id,
                                   presents,
+                                  id,
                                   taste,
                                   portion,
                                   selectMenu,
                                   selected,
-                                  handleOnClickCard,
-                                  productAvailability
+                                  productAvailability,
+                                  setCurrentIdCard
                               }) => {
 
+    const dispatch = useAppDispatch()
+
     const [text, setText] = useState<string>()
+
     const declensionMouse = declension(presents, ['мышь', 'мыши', 'мышей'])
 
     const boxMouseOverHandler = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -55,12 +61,22 @@ const CardItem: FC<IProps> = ({
         if (selected && productAvailability) {
             return <FooterText>{selectMenu}</FooterText>
         } else if (!selected && productAvailability) {
-            return <FooterText>Чего сидишь? Порадуй котэ, <a href="#">купи</a>.</FooterText>
+            return <FooterText>
+                Чего сидишь? Порадуй котэ, <a href="#" onClick={() => handleOnClickCard(id)}>купи</a>.
+            </FooterText>
         } else if (!productAvailability) {
             return <DisableCard>Печалька, с {taste} закончился.</DisableCard>
         }
     }
-    const styled = {color: '#666666', fontWeight: '400', fontSize: '16px', lineHeight: '19px'}
+    const handleOnClickCard = (id: string) => {
+        setCurrentIdCard(id)
+        if (!selected) {
+            dispatch(selectedOnClick(true))
+        } else {
+            dispatch(selectedOnClick(false))
+        }
+    }
+    const styledSupraTitle = {color: '#666666', fontWeight: '400', fontSize: '16px', lineHeight: '19px'}
     const styledHover = {
         color: '#E52E7A',
         fontWeight: '400',
@@ -68,32 +84,33 @@ const CardItem: FC<IProps> = ({
         lineHeight: '19px',
     }
     return (
-        <Wrapper onClick={() => handleOnClickCard(id)}>
+        <Wrapper>
             <CardContainer selected={selected} id={id} productAvailability={productAvailability}>
-                <Card productAvailability={productAvailability} onMouseOver={boxMouseOverHandler}
-                      onMouseOut={boxMouseOutHandler}>
+                <Card productAvailability={productAvailability}
+                      onMouseOver={boxMouseOverHandler}
+                      onMouseOut={boxMouseOutHandler}
+                      onClick={() => handleOnClickCard(id)}
+                >
                     <InfoContainer>
                         {selected && productAvailability ? <SupraTitleHover
-                                style={text === 'Сказочное заморское яство' ? styled : styledHover}>{text}</SupraTitleHover>
+                                style={text === 'Сказочное заморское яство' ? styledSupraTitle
+                                    : styledHover}>{text}</SupraTitleHover>
                             : <SupraTitle productAvailability={productAvailability}>Сказочное заморское
                                 яство</SupraTitle>}
                         <Title productAvailability={productAvailability}>Нямушка</Title>
                         <Taste productAvailability={productAvailability}>c {taste}</Taste>
                         <Presents
-                            productAvailability={productAvailability}>{portion} порций <br/> {presents > 1 && presents} {declensionMouse} в
+                            productAvailability={productAvailability}>{portion} порций <br/>
+                            {presents > 1 && presents} {declensionMouse} в
                             подарок</Presents>
                         {presents === 5 &&
                             <Presents productAvailability={productAvailability}>заказчик доволен</Presents>}
                     </InfoContainer>
-                    <CardFooter>
-                        <CatContainer productAvailability={productAvailability}>
-                            <ImageCat productAvailability={productAvailability} src={cat} alt="cat"/>
-                        </CatContainer>
+                        <ImageCat productAvailability={productAvailability} src={cat} alt="cat"/>
                         <Weight selected={selected} className={'weight'} productAvailability={productAvailability}>
                             <div>{weight}</div>
                             <span>кг</span>
                         </Weight>
-                    </CardFooter>
                 </Card>
             </CardContainer>
             {statusCard()}
@@ -107,14 +124,14 @@ export default CardItem;
 const Wrapper = styled.div`
 `
 const CardContainer = styled.div<{ selected: boolean, productAvailability: boolean }>`
-  margin: 14px;
+  margin-bottom: 14px;
   position: relative;
   width: 328px;
   height: 488px;
-  background-color: ${({selected, productAvailability}) => selected && productAvailability ? '#D91667' : '#1698D9'};
-  background-color: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
   border-radius: 14px;
   clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
+  background-color: ${({selected, productAvailability}) => selected && productAvailability ? '#D91667' : '#1698D9'};
+  background-color: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -170,17 +187,11 @@ const Presents = styled.div<{ productAvailability: boolean }>`
   line-height: 16px;
   color: ${({productAvailability}) => !productAvailability ? '#B3B3B3' : '#666666'}
 `
-const CatContainer = styled.div<{ productAvailability: boolean }>`
-  img {
-    opacity: ${({productAvailability}) => !productAvailability && 0.5
-    }
-
-`
 const ImageCat = styled.img<{ productAvailability: boolean }>`
   position: absolute;
   left: -30px;
   bottom: -88px;
-
+  opacity: ${({productAvailability}) => !productAvailability && 0.5};
 `
 
 export const Weight = styled.div<{ selected: boolean, productAvailability: boolean }>`
@@ -221,6 +232,9 @@ const FooterText = styled.div`
   line-height: 15px;
   color: #FFFFFF;
   text-align: center;
+  @media (max-width: 1240px) {
+    margin-bottom: 10px;
+  }
 
   a {
     color: #1698D9;
@@ -228,14 +242,14 @@ const FooterText = styled.div`
     text-decoration-style: dotted;;
   }
 `
-const CardFooter = styled.div`
-  display: flex;
-  flex-direction: row;
-`
+
 const DisableCard = styled.div`
   color: #FFFF66;
   font-weight: 400;
   font-size: 13px;
   line-height: 15px;
   text-align: center;
+  @media (max-width: 1240px) {
+    margin-bottom: 10px;
+  }
 `
