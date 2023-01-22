@@ -1,9 +1,7 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import styled from "styled-components";
 import {declension} from "../utils/declension";
 import cat from '../assets/img/Photo (1).png'
-import {selectedOnClick} from "../store/selectOnclick/selectOnclick";
-import {useAppDispatch} from "../store/Store";
 
 interface ICard {
     taste: string,
@@ -20,7 +18,6 @@ interface IProps extends ICard {
     cards: ICard[]
     setCurrentIdCard: (id: string) => void
     currenIdCard: string
-    // handleOnClickCard: (id: string) => void
 
 
 }
@@ -34,12 +31,11 @@ const CardItem: FC<IProps> = ({
                                   selectMenu,
                                   selected,
                                   productAvailability,
-                                  setCurrentIdCard
                               }) => {
 
-    const dispatch = useAppDispatch()
-
+    const [selectedCards, setSelectedCards] = useState<string[]>([])
     const [text, setText] = useState<string>()
+
 
     const declensionMouse = declension(presents, ['мышь', 'мыши', 'мышей'])
 
@@ -56,26 +52,25 @@ const CardItem: FC<IProps> = ({
         }
     }
 
+    const handlerSelectCards = useCallback((id: string) => {
+        setSelectedCards(prev => prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id])
+    }, [])
+
+    const activeCards = selectedCards.includes(id)
+
 
     const statusCard = () => {
         if (selected && productAvailability) {
             return <FooterText>{selectMenu}</FooterText>
         } else if (!selected && productAvailability) {
             return <FooterText>
-                Чего сидишь? Порадуй котэ, <a href="#" onClick={() => handleOnClickCard(id)}>купи</a>.
+                Чего сидишь? Порадуй котэ, <a href={'#'} onClick={() => handlerSelectCards(id)}>купи</a>.
             </FooterText>
         } else if (!productAvailability) {
             return <DisableCard>Печалька, с {taste} закончился.</DisableCard>
         }
     }
-    const handleOnClickCard = (id: string) => {
-        setCurrentIdCard(id)
-        if (!selected) {
-            dispatch(selectedOnClick(true))
-        } else {
-            dispatch(selectedOnClick(false))
-        }
-    }
+
     const styledSupraTitle = {color: '#666666', fontWeight: '400', fontSize: '16px', lineHeight: '19px'}
     const styledHover = {
         color: '#E52E7A',
@@ -83,13 +78,35 @@ const CardItem: FC<IProps> = ({
         fontSize: '16px',
         lineHeight: '19px',
     }
+
+    const activeBackground = () => {
+        if (!activeCards && productAvailability) {
+            return '#1698D9'
+        } else if (activeCards && productAvailability) {
+            return '#D91667'
+        } else if (!productAvailability) {
+            return '#B3B3B3'
+        }
+    }
+    const activeHover = () => {
+        if (!activeCards && productAvailability) {
+            return '#2EA8E6'
+        } else if (activeCards && productAvailability) {
+            return '#E52E7A'
+        } else if (!productAvailability) {
+            return '#B3B3B3'
+        }
+    }
     return (
         <Wrapper>
-            <CardContainer selected={selected} id={id} productAvailability={productAvailability}>
+            <CardContainer selected={selected} id={id} productAvailability={productAvailability}
+                           activeBackground={activeBackground}
+                           activeHover={activeHover}>
                 <Card productAvailability={productAvailability}
                       onMouseOver={boxMouseOverHandler}
                       onMouseOut={boxMouseOutHandler}
-                      onClick={() => handleOnClickCard(id)}
+                      onClick={() => handlerSelectCards(id)}
+
                 >
                     <InfoContainer>
                         {selected && productAvailability ? <SupraTitleHover
@@ -106,11 +123,13 @@ const CardItem: FC<IProps> = ({
                         {presents === 5 &&
                             <Presents productAvailability={productAvailability}>заказчик доволен</Presents>}
                     </InfoContainer>
-                        <ImageCat productAvailability={productAvailability} src={cat} alt="cat"/>
-                        <Weight selected={selected} className={'weight'} productAvailability={productAvailability}>
-                            <div>{weight}</div>
-                            <span>кг</span>
-                        </Weight>
+                    <ImageCat productAvailability={productAvailability} src={cat} alt="cat"/>
+                    <Weight selected={selected} className={'weight'}
+                            activeBackground={activeBackground}
+                            productAvailability={productAvailability}>
+                        <div>{weight}</div>
+                        <span>кг</span>
+                    </Weight>
                 </Card>
             </CardContainer>
             {statusCard()}
@@ -123,15 +142,18 @@ export default CardItem;
 
 const Wrapper = styled.div`
 `
-const CardContainer = styled.div<{ selected: boolean, productAvailability: boolean }>`
+const CardContainer = styled.div<{
+    selected: boolean, productAvailability: boolean,
+    activeBackground: () => string | undefined
+    activeHover: () => string | undefined
+}>`
   margin-bottom: 14px;
   position: relative;
   width: 328px;
   height: 488px;
   border-radius: 14px;
   clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 10%);
-  background-color: ${({selected, productAvailability}) => selected && productAvailability ? '#D91667' : '#1698D9'};
-  background-color: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
+  background-color: ${({activeBackground}) => activeBackground()};
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -139,12 +161,11 @@ const CardContainer = styled.div<{ selected: boolean, productAvailability: boole
   transition: 0.5s;
 
   &:hover {
-    background-color: ${({selected, productAvailability}) => selected && productAvailability ? '#E52E7A' : '#2EA8E6'};
-    background-color: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
+    background-color: ${({activeHover}) => activeHover()};
+
 
     .weight {
-      background: ${({selected, productAvailability}) => selected && productAvailability ? '#E52E7A' : '#2EA8E6'};
-      background-color: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
+      background-color: ${({activeHover}) => activeHover()};;
     }
   }
 }
@@ -159,7 +180,7 @@ const Card = styled.div<{ productAvailability: boolean }>`
   border-radius: 11px;
   background-color: #f2f2f2;
   clip-path: polygon(14.7% 0, 100% 0, 100% 100%, 0 100%, 0 9.7%);
-
+  overflow: hidden;
 `
 const SupraTitle = styled.div<{ productAvailability: boolean }>`
   font-weight: 400;
@@ -194,15 +215,17 @@ const ImageCat = styled.img<{ productAvailability: boolean }>`
   opacity: ${({productAvailability}) => !productAvailability && 0.5};
 `
 
-export const Weight = styled.div<{ selected: boolean, productAvailability: boolean }>`
+export const Weight = styled.div<{
+    selected: boolean, productAvailability: boolean,
+    activeBackground: () => string | undefined
+}>`
   position: absolute;
   right: 16px;
   bottom: 16px;
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: ${({selected, productAvailability}) => selected && productAvailability ? '#D91667' : '#1698D9'};
-  background: ${({productAvailability}) => !productAvailability && '#B3B3B3'};
+  background-color: ${({activeBackground}) => activeBackground()};
   display: flex;
   align-items: center;
   justify-content: center;

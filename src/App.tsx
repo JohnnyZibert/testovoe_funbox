@@ -4,45 +4,24 @@ import background from '../src/assets/img/Group 1.png'
 import styled from "styled-components";
 import CardItem from "./components/CardItem";
 import {cards} from "./data";
-import {useSelector} from "react-redux";
-import {RootState} from "./store/Store";
 
 function App() {
     const [currenIdCard, setCurrentIdCard] = useState<string>()
 
-    const { isClicked} = useSelector((state: RootState) => state.isClickedCard)
-    const selectedCard = cards.map((card) => {
-        if (card.id === currenIdCard && isClicked) {
-            card.selected = true
-        } else if (card.id === currenIdCard && card.selected) {
-            card.selected = false
-        }
-        return card
-    })
-
-
     return (
         <ContentWrapper>
             <GlobalStyles/>
-            <ImageContainer>
                 <Image src={background} alt="background"/>
-            </ImageContainer>
             <CardContainer>
                 <div>
                     <Title>Ты сегодня покормил кота?</Title>
-                    <Cards>{selectedCard.map((card) => <CardItem
-                        key={`${card?.portion}${card?.weight}`}
-                        cards={cards}
-                        currenIdCard={currenIdCard || ''}
-                        id={card.id}
-                        selected={card.selected}
-                        selectMenu={card.selectMenu}
-                        taste={card.taste}
-                        productAvailability={card.productAvailability}
-                        portion={card.portion}
-                        presents={card.presents}
-                        setCurrentIdCard={setCurrentIdCard}
-                        weight={card.weight} />
+                    <Cards>{cards.map((card) => <CardItem
+                            key={`${card.id}`}
+                            {...card}
+                            cards={cards}
+                            currenIdCard={currenIdCard || ''}
+                            setCurrentIdCard={setCurrentIdCard}
+                        />
                     )}</Cards>
                 </div>
 
@@ -61,8 +40,7 @@ const ContentWrapper = styled.div`
   min-height: 100vh;
 
 `
-const ImageContainer = styled.div`
-  background: green;`
+
 const Image = styled.img`
   position: fixed;
   top: 0;
@@ -74,7 +52,7 @@ const Image = styled.img`
 const CardContainer = styled.div`
   position: absolute;
   @media (max-width: 1240px) {
-    top:60px;
+    top: 60px;
   }
 `
 const Cards = styled.div`
@@ -85,7 +63,7 @@ const Cards = styled.div`
   @media (max-width: 1240px) {
     justify-content: center;
   }
-  
+
 `
 
 const Title = styled.div`
