@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {GlobalStyles} from "./components/GlobalStyles";
-import background from '../src/assets/img/Group 1.png'
+import background from './assets/img/Group_1.png'
 import styled from "styled-components";
 import CardItem from "./components/CardItem";
 import {cards} from "./data";
@@ -38,6 +38,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+
 
 `
 
