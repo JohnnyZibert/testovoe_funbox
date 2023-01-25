@@ -1,37 +1,39 @@
-import React, {useState} from 'react';
-import {GlobalStyles} from "./components/GlobalStyles";
+import React, { useState } from 'react'
+import styled from 'styled-components'
+
 import background from './assets/img/Group_1.png'
-import styled from "styled-components";
-import CardItem from "./components/CardItem";
-import {cards} from "./data";
+import CardItem from './components/CardItem'
+import { GlobalStyles } from './components/GlobalStyles'
+import { cards } from './data'
 
 function App() {
-    const [currenIdCard, setCurrentIdCard] = useState<string>()
+  const [currenIdCard, setCurrentIdCard] = useState<string>()
 
-    return (
-        <ContentWrapper>
-            <GlobalStyles/>
-                <Image src={background} alt="background"/>
-            <CardContainer>
-                <div>
-                    <Title>Ты сегодня покормил кота?</Title>
-                    <Cards>{cards.map((card) => <CardItem
-                            key={`${card.id}`}
-                            {...card}
-                            cards={cards}
-                            currenIdCard={currenIdCard || ''}
-                            setCurrentIdCard={setCurrentIdCard}
-                        />
-                    )}</Cards>
-                </div>
-
-            </CardContainer>
-        </ContentWrapper>
-    );
+  return (
+    <ContentWrapper>
+      <GlobalStyles />
+      <Image src={background} alt="background" />
+      <CardContainer>
+        <div>
+          <Title>Ты сегодня покормил кота?</Title>
+          <Cards>
+            {cards.map((card) => (
+              <CardItem
+                key={`${card.id}`}
+                {...card}
+                cards={cards}
+                currenIdCard={currenIdCard || ''}
+                setCurrentIdCard={setCurrentIdCard}
+              />
+            ))}
+          </Cards>
+        </div>
+      </CardContainer>
+    </ContentWrapper>
+  )
 }
 
-export default App;
-
+export default App
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -46,7 +48,6 @@ const Image = styled.img`
   left: 0;
   min-width: 100%;
   min-height: 100%;
-
 `
 const CardContainer = styled.div`
   position: absolute;
@@ -62,14 +63,13 @@ const Cards = styled.div`
   @media (max-width: 1240px) {
     justify-content: center;
   }
-
 `
 
 const Title = styled.div`
   z-index: 2;
   font-size: 36px;
   line-height: 44px;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 24px;
   text-align: center;
   font-weight: 15;
@@ -77,4 +77,3 @@ const Title = styled.div`
     padding: 0 15px;
   }
 `
-

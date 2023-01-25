@@ -1,57 +1,66 @@
-import React, {FC} from 'react';
-import styled from "styled-components";
+import React, { FC } from 'react'
+import styled from 'styled-components'
 
 interface IProps {
-    selected: boolean
-    productAvailability: boolean
-    taste: string
-    selectMenu: string
-    handlerSelectCards: (id: string) => void
-    id: string
-    activeCards: boolean
+  selected: boolean
+  productAvailability: boolean
+  taste: string
+  selectMenu: string
+  handlerSelectCards: (id: string) => void
+  id: string
+  activeCards: boolean
 }
 
 const FooterTextComponent: FC<IProps> = ({
-                                             productAvailability,
-                                             taste,
-                                             selectMenu,
-                                             handlerSelectCards,
-                                             id,
-                                             activeCards
-                                         }) => {
+  productAvailability,
+  taste,
+  selectMenu,
+  handlerSelectCards,
+  id,
+  activeCards,
+}) => {
+  return (
+    <div>
+      {activeCards && productAvailability && (
+        <FooterText>{selectMenu}</FooterText>
+      )}
+      {!activeCards && productAvailability && (
+        <FooterText>
+          Чего сидишь? Порадуй котэ,{' '}
+          <a href={'#'} onClick={() => handlerSelectCards(id)}>
+            купи
+          </a>
+          .
+        </FooterText>
+      )}
+      {!productAvailability && (
+        <DisableCard>Печалька, с {taste} закончился.</DisableCard>
+      )}
+    </div>
+  )
+}
 
-    return (
-        <div>
-            {activeCards && productAvailability && <FooterText>{selectMenu}</FooterText>}
-            {!activeCards && productAvailability && <FooterText>
-                Чего сидишь? Порадуй котэ, <a href={'#'} onClick={() => handlerSelectCards(id)}>купи</a>.
-            </FooterText>}
-            {!productAvailability && <DisableCard>Печалька, с {taste} закончился.</DisableCard>}
-        </div>
-    );
-};
-
-export default FooterTextComponent;
+export default FooterTextComponent
 
 const FooterText = styled.div`
   font-weight: 400;
   font-size: 13px;
   line-height: 15px;
-  color: #FFFFFF;
+  color: #ffffff;
   text-align: center;
   @media (max-width: 1240px) {
     margin-bottom: 10px;
   }
 
   a {
-    color: #1698D9;
+    color: #1698d9;
     text-decoration: underline;
-    text-decoration-style: dotted;;
+    text-decoration-style: dotted;
   }
 `
 
 const DisableCard = styled.div`
-  color: #FFFF66;
+  color: #ffff66;
   font-weight: 400;
   font-size: 13px;
   line-height: 15px;
