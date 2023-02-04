@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import background from './assets/img/Group_1.png'
+import background from './assets/img/Pattern@2x.png'
 import CardItem from './components/CardItem'
 import { GlobalStyles } from './components/GlobalStyles'
 import { cards } from './data'
@@ -10,9 +10,14 @@ function App() {
   const [currenIdCard, setCurrentIdCard] = useState<string>()
 
   return (
-    <ContentWrapper>
+    <ContentWrapper
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <GlobalStyles />
-      <Image src={background} alt="background" />
       <CardContainer>
         <div>
           <Title>Ты сегодня покормил кота?</Title>
@@ -42,13 +47,6 @@ const ContentWrapper = styled.div`
   min-height: 100vh;
 `
 
-const Image = styled.img`
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-`
 const CardContainer = styled.div`
   position: absolute;
   @media (max-width: 1240px) {

@@ -27,10 +27,7 @@ const FooterTextComponent: FC<IProps> = ({
       {!activeCards && productAvailability && (
         <FooterText>
           Чего сидишь? Порадуй котэ,{' '}
-          <a href={'#'} onClick={() => handlerSelectCards(id)}>
-            купи
-          </a>
-          .
+          <button onClick={() => handlerSelectCards(id)}>купи</button>.
         </FooterText>
       )}
       {!productAvailability && (
@@ -48,14 +45,16 @@ const FooterText = styled.div`
   line-height: 15px;
   color: #ffffff;
   text-align: center;
-  @media (max-width: 1240px) {
-    margin-bottom: 10px;
-  }
-
-  a {
+  button {
+    background: transparent;
+    border: none;
     color: #1698d9;
     text-decoration: underline;
     text-decoration-style: dotted;
+    cursor: pointer;
+  }
+  @media (max-width: 1240px) {
+    margin-bottom: 10px;
   }
 `
 

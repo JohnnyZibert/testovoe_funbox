@@ -122,15 +122,13 @@ const CardItem: FC<IProps> = ({
             )}
             <Title productAvailability={productAvailability}>Нямушка</Title>
             <Taste productAvailability={productAvailability}>c {taste}</Taste>
-            <Presents productAvailability={productAvailability}>
-              {portion} порций <br />
-              {presents > 1 && presents} {declensionMouse} в подарок
-            </Presents>
-            {presents === 5 && (
-              <Presents productAvailability={productAvailability}>
-                заказчик доволен
-              </Presents>
-            )}
+            <PresentsContainer productAvailability={productAvailability}>
+              <li>
+                {portion} порций <br />
+                {presents > 1 && presents} {declensionMouse} в подарок
+              </li>
+              {presents === 5 && <li>заказчик доволен</li>}
+            </PresentsContainer>
           </InfoContainer>
           <ImageCat
             productAvailability={productAvailability}
@@ -227,13 +225,15 @@ const Taste = styled.h2<{ productAvailability: boolean }>`
   margin-bottom: 15px;
   color: ${({ productAvailability }) => !productAvailability && '#B3B3B3'};
 `
-const Presents = styled.div<{ productAvailability: boolean }>`
+const PresentsContainer = styled.ul<{ productAvailability: boolean }>`
+  list-style: none;
   font-weight: 700;
   font-size: 14px;
   line-height: 16px;
   color: ${({ productAvailability }) =>
     !productAvailability ? '#B3B3B3' : '#666666'};
 `
+
 const ImageCat = styled.img<{ productAvailability: boolean }>`
   position: absolute;
   left: -30px;
