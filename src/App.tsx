@@ -11,11 +11,13 @@ function App() {
 
   return (
     <ContentWrapper
-      style={{
-        backgroundImage: `url(${background})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }}
+    // style={{
+    //   backgroundImage: `url(${background})`,
+    //   backgroundSize: 'cover',
+    //   backgroundRepeat: 'no-repeat',
+    //   background:
+    //     'linear-gradient(0deg, #000000 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 50%, #000000 100%);',
+    // }}
     >
       <GlobalStyles />
       <CardContainer>
@@ -45,6 +47,15 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background: linear-gradient(
+      0deg,
+      #000000 0%,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0) 50%,
+      #000000 100%
+    ),
+    url(${background}), no-repeat;
+  background-size: cover;
 `
 
 const CardContainer = styled.div`
